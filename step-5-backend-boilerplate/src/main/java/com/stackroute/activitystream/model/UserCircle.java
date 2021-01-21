@@ -1,5 +1,13 @@
 package com.stackroute.activitystream.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
 /*
  * The class "UserCircle" will be acting as the data model for the user_circle Table in the database. Please
  * note that this class is annotated with @Entity annotation. Hibernate will scan all package for 
@@ -10,6 +18,8 @@ package com.stackroute.activitystream.model;
  * to autowire the class from any other components of the application
  */
 
+@Entity
+@Table(name = "user_circle")
 public class UserCircle {
 
 	/*
@@ -18,9 +28,48 @@ public class UserCircle {
 	 * should be generated. This class should also contain the getters and setters
 	 * for the fields.
 	 */
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer userCircleId;
+	
+	private String username;
+	
+	private String circleName;
 
 	public UserCircle(String string, String string2) {
-		// TODO Auto-generated constructor stub
+		username = string;
+		circleName = string2;
+	}
+	
+	public UserCircle() {
+		
 	}
 
+	public Integer getUserCircleId() {
+		return userCircleId;
+	}
+
+	public void setUserCircleId(Integer userCircleId) {
+		this.userCircleId = userCircleId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getCircleName() {
+		return circleName;
+	}
+
+	public void setCircleName(String circleName) {
+		this.circleName = circleName;
+	}
+
+	
+	
 }

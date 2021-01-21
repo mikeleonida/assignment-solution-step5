@@ -1,8 +1,13 @@
 package com.stackroute.activitystream.serviceimpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.stackroute.activitystream.model.User;
+import com.stackroute.activitystream.repository.UserRepository;
 import com.stackroute.activitystream.service.UserService;
 
 /*
@@ -14,12 +19,17 @@ import com.stackroute.activitystream.service.UserService;
 * better. Additionally, tool support and additional behavior might rely on it in the 
 * future.
 * */
+
+@Service
 public class UserServiceImpl implements UserService {
 
 	/*
 	 * Autowiring should be implemented for the UserRepository. Please note that we
 	 * should not create any object using the new keyword.
 	 */
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	/*
 	 * This method should be used to save a new user. Call the corresponding method
@@ -27,8 +37,12 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	public boolean save(User user) {
-
-		return false;
+		try {
+			userRepository.save(user);
+		} catch (Exception e) { 
+			return false;
+		}
+		return true;
 	}
 
 	/*
@@ -37,8 +51,13 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	public boolean update(User user) {
-
-		return false;
+		try {
+			userRepository.delete(user.getUsername());
+			userRepository.save(user);
+		} catch(Exception e) {
+			return false;
+		}
+		return true;
 
 	}
 
@@ -48,8 +67,12 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	public boolean delete(User user) {
-
-		return false;
+		try {
+			userRepository.delete(user.getUsername());
+		} catch(Exception e) {
+			return false;
+		}
+		return true;
 	}
 
 	/*
@@ -58,7 +81,11 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	public List<User> list() {
-		return null;
+		List<User> lu = new ArrayList<User>();
+		for (User u : userRepository.findAll()) {
+			lu.add(u);
+		}
+		return lu;
 	}
 
 	/*
@@ -67,7 +94,14 @@ public class UserServiceImpl implements UserService {
 	 * 
 	 */
 	public boolean validate(String username, String password) {
-
+		try {
+			User u = userRepository.validate(username, password);
+			if (u != null) {
+				return true;
+			}
+		} catch (Exception e) {
+			
+		}
 		return false;
 	}
 
@@ -76,8 +110,10 @@ public class UserServiceImpl implements UserService {
 	 * method of Respository interface.
 	 */
 	public User get(String username) {
-		return null;
-
+		if (username == null) {
+			return null;
+		}
+		return userRepository.findOne(username);
 	}
 
 	/*
@@ -85,8 +121,9 @@ public class UserServiceImpl implements UserService {
 	 * Call the corresponding method of Respository interface.
 	 */
 	public boolean exists(String username) {
-
-		return false;
-
+		if (username == null) {
+			return false;
+		}
+		return userRepository.exists(username);
 	}
 }

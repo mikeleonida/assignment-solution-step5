@@ -13,7 +13,7 @@ public class WebApplicationInitializer extends AbstractAnnotationConfigDispatche
 	@Override
 	protected Class<?>[] getRootConfigClasses() {
 		// TODO Auto-generated method stub
-		return new Class[] {/*our ApplicationContextConfig class goes here*/};
+		return new Class[] { ApplicationContextConfig2.class };
 	}
 
 	@Override

@@ -1,5 +1,10 @@
 package com.stackroute.activitystream.model;
 
+import java.io.Serializable;
+
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /*
  * The class "User" will be acting as the data model for the user Table in the database. Please
  * note that this class is annotated with @Entity annotation. Hibernate will scan all package for 
@@ -10,40 +15,60 @@ package com.stackroute.activitystream.model;
  * to autowire the class from any other components of the application
  */
 
-public class User {
+@Entity
+public class User implements Serializable {
 
 	/*
 	 * This class should have three fields (username,name,password). Out of these
 	 * three fields, the field username should be the primary key. This class should
 	 * also contain the getters and setters for the fields.
 	 */
+	@Id
+	private String username;
+	
+	private String name;
+	
+	private String password;
 
 	public User(String string, String string2, String string3) {
-		// TODO Auto-generated constructor stub
+		this.username = string;
+		this.name = string2;
+		this.password = string3;
 	}
 
 	public User() {
-		// TODO Auto-generated constructor stub
+		
 	}
 
 	public void setName(String string) {
-		// TODO Auto-generated method stub
-
+		name = string;
 	}
 
 	public void setPassword(String string) {
-		// TODO Auto-generated method stub
-
+		password = string;
 	}
 
 	public void setUsername(String string) {
-		// TODO Auto-generated method stub
-
+		username = string;
 	}
 
 	public String getPassword() {
-		// TODO Auto-generated method stub
-		return null;
+		return password;
+	}
+	
+	public String getUsername() {
+		return username;
 	}
 
+	public String getName() {
+		return name;
+	}
+	
+	public static boolean isValidUsername(String username) {
+		if (username.length() > 7 && (!username.contains(" "))) {
+			return true;
+		}
+		return false;
+	}
+	
 }

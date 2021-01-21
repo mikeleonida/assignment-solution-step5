@@ -2,6 +2,9 @@ package com.stackroute.activitystream.model;
 
 import java.sql.Timestamp;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+
 /*
  * The class "Circle" will be acting as the data model for the circle Table in the database. Please
  * note that this class is annotated with @Entity annotation. Hibernate will scan all package for 
@@ -12,6 +15,7 @@ import java.sql.Timestamp;
  * to autowire the class from any other components of the application
  */
 
+@Entity
 public class Circle {
 
 	/*
@@ -21,33 +25,46 @@ public class Circle {
 	 * of createdDate should not be accepted from the user but should be always
 	 * initialized with the system date
 	 */
+	
+	@Id
+	private String circleName;
+	
+	private String creatorId;
+	
+	private Timestamp createdDate;
 
 	public Circle(String string, String string2, Timestamp timestamp) {
-		// TODO Auto-generated constructor stub
+		this.circleName = string;
+		this.creatorId = string2;
+		this.createdDate = timestamp;
 	}
 
 	public Circle() {
-		// TODO Auto-generated constructor stub
+
 	}
 
 	public void setCircleName(String string) {
-		// TODO Auto-generated method stub
-
+		circleName = string;
 	}
 
 	public void setCreatedDate() {
-		// TODO Auto-generated method stub
-
+		createdDate = new Timestamp(System.currentTimeMillis());
 	}
 
 	public void setCreatorId(String string) {
-		// TODO Auto-generated method stub
-
+		creatorId = string;
 	}
 
 	public String getCircleName() {
-		// TODO Auto-generated method stub
-		return null;
+		return circleName;
+	}
+	
+	public String getCreatorId() {
+		return creatorId;
 	}
 
+	public Timestamp getCreatedDate() {
+		return createdDate;
+	}
+	
 }

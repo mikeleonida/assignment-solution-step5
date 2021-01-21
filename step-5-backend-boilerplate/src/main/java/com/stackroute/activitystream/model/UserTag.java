@@ -1,5 +1,13 @@
 package com.stackroute.activitystream.model;
 
+import javax.persistence.Entity;
+import javax.persistence.GeneratedValue;
+import javax.persistence.GenerationType;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
+import org.springframework.stereotype.Component;
+
 /*
  * The class "UserTag" will be acting as the data model for the user_tag Table in the database. Please
  * note that this class is annotated with @Entity annotation. Hibernate will scan all package for 
@@ -10,6 +18,9 @@ package com.stackroute.activitystream.model;
  * to autowire the class from any other components of the application
  */
 
+@Component
+@Entity
+@Table(name = "user_tag")
 public class UserTag {
 
 	/*
@@ -18,5 +29,48 @@ public class UserTag {
 	 * generated. This class should also contain the getters and setters for the
 	 * fields.
 	 */
+	
+	@Id
+	@GeneratedValue(strategy = GenerationType.AUTO)
+	private Integer userTagId;
+	
+	private String username;
+	
+	private String tag;
+	
+	public UserTag() {
+		
+	}
+	
+	public UserTag(String username, String tag) {
+		this.username = username;
+		this.tag = tag;
+	}
 
+	public Integer getUserTagId() {
+		return userTagId;
+	}
+
+	public void setUserTagId(Integer userTagId) {
+		this.userTagId = userTagId;
+	}
+
+	public String getUsername() {
+		return username;
+	}
+
+	public void setUsername(String username) {
+		this.username = username;
+	}
+
+	public String getTag() {
+		return tag;
+	}
+
+	public void setTag(String tag) {
+		this.tag = tag;
+	}
+
+	
+	
 }

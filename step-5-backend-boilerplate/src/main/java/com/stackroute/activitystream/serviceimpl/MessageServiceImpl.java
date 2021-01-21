@@ -2,7 +2,11 @@ package com.stackroute.activitystream.serviceimpl;
 
 import java.util.List;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
 import com.stackroute.activitystream.model.Message;
+import com.stackroute.activitystream.repository.MessageRepository;
 import com.stackroute.activitystream.service.MessageService;
 
 /*
@@ -14,6 +18,8 @@ import com.stackroute.activitystream.service.MessageService;
 * better. Additionally, tool support and additional behavior might rely on it in the 
 * future.
 * */
+
+@Service
 public class MessageServiceImpl implements MessageService {
 
 	/*
@@ -21,13 +27,20 @@ public class MessageServiceImpl implements MessageService {
 	 * UserTagRepository, MessageRepository, UserCircleRepository. Please note that
 	 * we should not create any object using the new keyword
 	 */
+	
+	@Autowired
+	private MessageRepository messageRepository;
 
 	/*
 	 * This method should be used to get all messages from a specific circle. Call
 	 * the corresponding method of Respository interface.
 	 */
 	public List<Message> getMessagesFromCircle(String circleName, int pageNumber) {
-
+		try {
+			return messageRepository.getMessagesFromCircle(circleName);
+		} catch(Exception e) {
+			
+		}
 		return null;
 	}
 
@@ -37,7 +50,11 @@ public class MessageServiceImpl implements MessageService {
 	 * interface.
 	 */
 	public List<Message> getMessagesFromUser(String username, String otherUsername, int pageNumber) {
-
+		try {
+			return messageRepository.getMessagesFromUser(username, otherUsername);
+		} catch(Exception e) {
+			
+		}
 		return null;
 	}
 
@@ -47,7 +64,11 @@ public class MessageServiceImpl implements MessageService {
 	 * the circle. Call the corresponding method of Respository interface.
 	 */
 	public boolean sendMessageToCircle(String circleName, Message message) {
-
+		//Still need to implement
+	
+//		messageRepository.save(new Message(messageRepository));
+//		String senderName, String receiverId, String circleName, /*Timestamp postedDate,*/
+//		String streamType, String message, String tag
 		return false;
 	}
 
@@ -57,7 +78,7 @@ public class MessageServiceImpl implements MessageService {
 	 * corresponding method of Respository interface.
 	 */
 	public boolean sendMessageToUser(String username, Message message) {
-
+		//Still need to implement
 		return false;
 
 	}
@@ -67,9 +88,12 @@ public class MessageServiceImpl implements MessageService {
 	 * Call the corresponding method of Respository interface.
 	 */
 	public List<String> listTags() {
-
+		try {
+			return messageRepository.listAllTags();
+		} catch(Exception e) {
+			
+		}
 		return null;
-
 	}
 
 	/*
@@ -77,7 +101,11 @@ public class MessageServiceImpl implements MessageService {
 	 * user. Call the corresponding method of Respository interface.
 	 */
 	public List<String> listMyTags(String username) {
-
+		try {
+			messageRepository.listMyTags(username);
+		} catch(Exception e) {
+			
+		}
 		return null;
 	}
 
@@ -87,7 +115,11 @@ public class MessageServiceImpl implements MessageService {
 	 * Respository interface.
 	 */
 	public List<Message> showMessagesWithTag(String tag, int pageNumber) {
-
+		try {
+			return messageRepository.showMessagesWithTag(tag);
+		} catch(Exception e) {
+			
+		}
 		return null;
 	}
 
@@ -96,7 +128,7 @@ public class MessageServiceImpl implements MessageService {
 	 * corresponding method of Respository interface.
 	 */
 	public boolean subscribeUserToTag(String username, String tag) {
-
+		//Still need to implement
 		return false;
 	}
 
@@ -105,7 +137,7 @@ public class MessageServiceImpl implements MessageService {
 	 * the corresponding method of Respository interface.
 	 */
 	public boolean unsubscribeUserToTag(String username, String tag) {
-
+		//Still need to implement
 		return false;
 	}
 

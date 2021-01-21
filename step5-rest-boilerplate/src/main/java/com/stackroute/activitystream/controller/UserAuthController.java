@@ -1,5 +1,22 @@
 package com.stackroute.activitystream.controller;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.stackroute.activitystream.model.User;
+import com.stackroute.activitystream.service.UserService;
+
+
 /*
  * As in this assignment, we are working with creating RESTful web service, hence annotate
  * the class with @RestController annotation.A class annotated with @Controller annotation
@@ -9,12 +26,21 @@ package com.stackroute.activitystream.controller;
  * is equivalent to using @Controller and @ResposeBody annotation
  */
 
+@RestController
 public class UserAuthController {
 
 	/*
 	 * Autowiring should be implemented for the UserService. Please note that we
 	 * should not create any object using the new keyword
 	 */
+
+	public static String SESSION_USERNAME_KEY = "username";
+
+	@Autowired
+	private UserService userService;
+
+	@PersistenceContext
+	private EntityManager entityManager;
 
 	/*
 	 * Define a handler method which will authenticate a user by reading the
@@ -29,6 +55,20 @@ public class UserAuthController {
 	 * method
 	 */
 
+	@RequestMapping(value = "/api/authenticate", method = RequestMethod.POST)
+	public ResponseEntity loginUser(@RequestBody User u) {
+		try {
+			if (userService.validate(u.getUsername(), u.getPassword())) {
+				Session session = entityManager.unwrap(Session.class);
+				session.setProperty(SESSION_USERNAME_KEY, u.getUsername());
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+	}
+
 	/*
 	 * Define a handler method which will perform logout. Post logout, the user
 	 * session is to be destroyed. This handler method should return any one of the
@@ -37,5 +77,17 @@ public class UserAuthController {
 	 * 
 	 * This handler method should map to the URL "/api/logout" using HTTP PUT method
 	 */
+
+	@RequestMapping(value = "/api/logout", method = RequestMethod.PUT)
+	public ResponseEntity logoutUser() {
+		try {
+			Session session = entityManager.unwrap(Session.class);
+			session.setProperty(SESSION_USERNAME_KEY, null);
+			return new ResponseEntity<>(HttpStatus.OK);
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.BAD_REQUEST);
+	}
 
 }

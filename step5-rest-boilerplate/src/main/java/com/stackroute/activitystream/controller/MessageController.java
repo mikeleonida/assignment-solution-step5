@@ -1,5 +1,19 @@
 package com.stackroute.activitystream.controller;
 
+import org.hibernate.Session;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.RestController;
+
+import com.stackroute.activitystream.model.Circle;
+import com.stackroute.activitystream.model.Message;
+import com.stackroute.activitystream.model.UserTag;
+import com.stackroute.activitystream.service.MessageService;
+
 /*
  * As in this assignment, we are working with creating RESTful web service, hence annotate
  * the class with @RestController annotation.A class annotated with @Controller annotation
@@ -9,6 +23,7 @@ package com.stackroute.activitystream.controller;
  * is equivalent to using @Controller and @ResposeBody annotation
  */
 
+@RestController
 public class MessageController {
 
 	/*
@@ -31,6 +46,12 @@ public class MessageController {
 	 * Autowiring should be implemented for the MessageService and UserTag. Please
 	 * note that we should not create any object using the new keyword
 	 */
+	
+	@Autowired
+	private MessageService messageService;
+	
+	@Autowired
+	private UserTag userTag;
 
 	/*
 	 * Define a handler method which will send a message to a circle by reading the
@@ -46,6 +67,25 @@ public class MessageController {
 	 * "circleName" should be replaced by the destination circle name without {}
 	 */
 
+	@RequestMapping(value = "/api/message/sendMessageToCircle/{circleName}", method = RequestMethod.POST)
+	public ResponseEntity addNewUser(@RequestBody Message m, @PathVariable("circleName") String cName) {
+		try {
+			if (!UserController.userLoggedIn("")) {
+				return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+			}
+			Session session = entityManager.unwrap(Session.class);
+			String creatorId = (String) session.getProperties().get(UserAuthController.SESSION_USERNAME_KEY);
+			m.setSenderName(creatorId);				
+			m.setCircleName(cName);
+			if (messageService.sendMessageToCircle(cName, m)) {
+				return new ResponseEntity<>(HttpStatus.OK);
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+	}
+	
 	/*
 	 * Define a handler method which will send a message to an individual user by
 	 * reading the Serialized message object from request body and save the message
